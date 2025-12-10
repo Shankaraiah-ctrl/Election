@@ -1,3 +1,5 @@
+// ===== PREVIOUS CODE (Keep all this) =====
+
 // Smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -162,5 +164,147 @@ window.addEventListener('scroll', function() {
     if(heroSection) {
         const rate = scrolled * -0.5;
         heroSection.style.backgroundPosition = `center ${rate}px`;
+    }
+});
+
+// ===== NEW MOBILE-SPECIFIC CODE (Add this at the end) =====
+
+// Mobile-Specific Interactions
+document.addEventListener('DOMContentLoaded', function() {
+    // Hide loading screen
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if (loadingOverlay) {
+        setTimeout(() => {
+            loadingOverlay.style.opacity = '0';
+            setTimeout(() => {
+                loadingOverlay.style.display = 'none';
+            }, 500);
+        }, 1500);
+    }
+    
+    // Interactive vote animation
+    const voteAnimation = document.querySelector('.vote-animation-container');
+    const fingerTouch = document.querySelector('.finger-touch');
+    const voteScissor = document.querySelector('.vote-scissor');
+    const voteText = document.querySelector('.vote-text');
+    
+    if (voteAnimation) {
+        voteAnimation.addEventListener('click', function() {
+            // Animate finger touching scissors
+            fingerTouch.style.animation = 'touchMove 0.5s forwards';
+            voteScissor.style.animation = 'scissorPulse 0.3s 3';
+            
+            // Change text
+            voteText.textContent = 'ఓటు వేసినారు! ✅';
+            voteText.style.background = 'linear-gradient(135deg, #4CAF50, #2E7D32)';
+            voteText.style.color = 'white';
+            
+            // Reset after animation
+            setTimeout(() => {
+                fingerTouch.style.animation = 'touchMove 4s infinite ease-in-out';
+                voteScissor.style.animation = 'scissorPulse 4s infinite ease-in-out';
+                voteText.textContent = 'మళ్లీ టచ్ చేయండి!';
+                voteText.style.background = 'var(--white)';
+                voteText.style.color = 'var(--dark-green)';
+            }, 2000);
+        });
+        
+        // Touch feedback for mobile
+        voteAnimation.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.95)';
+        });
+        
+        voteAnimation.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
+    }
+    
+    // Hide swipe indicator after first scroll
+    const swipeIndicator = document.querySelector('.swipe-indicator');
+    let scrolled = false;
+    
+    window.addEventListener('scroll', function() {
+        if (!scrolled && window.scrollY > 100) {
+            scrolled = true;
+            if (swipeIndicator) {
+                swipeIndicator.style.opacity = '0';
+                setTimeout(() => {
+                    swipeIndicator.style.display = 'none';
+                }, 500);
+            }
+        }
+    });
+    
+    // Enhanced touch interactions for manifesto cards
+    const manifestoCards = document.querySelectorAll('.manifesto-card');
+    
+    manifestoCards.forEach(card => {
+        let touchStartY = 0;
+        let touchEndY = 0;
+        
+        card.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+            this.style.transition = 'none';
+        });
+        
+        card.addEventListener('touchmove', function(e) {
+            touchEndY = e.touches[0].clientY;
+            const touchDiff = touchStartY - touchEndY;
+            
+            if (touchDiff > 10) { // Swipe up
+                this.style.transform = 'translateY(-10px)';
+            }
+        });
+        
+        card.addEventListener('touchend', function() {
+            this.style.transition = 'var(--transition)';
+            this.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Vibration on vote (if supported)
+    document.querySelectorAll('.cta-button, .phone-link').forEach(button => {
+        button.addEventListener('click', function() {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(50);
+            }
+        });
+        
+        button.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.95)';
+        });
+        
+        button.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+    
+    // Mobile parallax effect
+    window.addEventListener('scroll', function() {
+        const scrolled = window.pageYOffset;
+        const manifestoSection = document.querySelector('.manifesto-section');
+        
+        if (manifestoSection) {
+            const rate = scrolled * 0.1;
+            manifestoSection.style.backgroundPosition = `center ${rate}px`;
+        }
+    });
+    
+    // Mobile-optimized image loading
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        // Add loading="lazy" for better mobile performance
+        img.setAttribute('loading', 'lazy');
+    });
+    
+    // Touch device detection
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    if (isTouchDevice) {
+        // Add touch-specific classes
+        document.body.classList.add('touch-device');
+        
+        // Adjust scroll behavior for touch
+        document.documentElement.style.scrollBehavior = 'smooth';
     }
 });
