@@ -164,3 +164,44 @@ window.addEventListener('scroll', function() {
         heroSection.style.backgroundPosition = `center ${rate}px`;
     }
 });
+
+
+
+
+
+
+
+// Music feature - append to script.js
+(function(){
+  const overlay = document.getElementById('music-overlay');
+  const enterBtn = document.getElementById('enterMusicBtn');
+  const audio = document.getElementById('bgAudio');
+
+  audio.muted = true;
+
+  function safePlay() {
+    return audio.play().catch(err => {
+      console.log('Audio play blocked or failed', err);
+    });
+  }
+
+  enterBtn.addEventListener('click', async function () {
+    overlay.style.display = 'none';
+    overlay.setAttribute('aria-hidden', 'true');
+    audio.muted = false;
+    await safePlay();
+  });
+
+  document.addEventListener('click', function oncePlay() {
+    if (overlay && overlay.style.display !== 'none') {
+      overlay.style.display = 'none';
+      overlay.setAttribute('aria-hidden', 'true');
+      audio.muted = false;
+      safePlay();
+    }
+    document.removeEventListener('click', oncePlay);
+  });
+
+})();
+
+
