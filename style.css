@@ -175,8 +175,8 @@ body::before {
 }
 
 .photo-frame {
-    width: 320px;
-    height: 400px;
+    width: 380px;
+    height: 480px;
     margin: 0 auto;
     position: relative;
 }
@@ -779,3 +779,4 @@ footer {
         font-size: 1.8rem;
     }
 }
+
